@@ -1,44 +1,49 @@
-import React, { useState } from 'react';
-import '../../styles/login/style.css';
+import React, { useState } from "react";
+import "../../styles/login/style.css";
+import { useNavigate } from "react-router-dom";
 
 function LoginComponent() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showError, setshowError] = useState(false);
+  const [showSuccess, setshowSuccess] = useState(false);
+  const navigate = useNavigate();
 
-  const handleUsernameChange = (e) => {
-    setUsername(e.target.value);
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+    setshowError(false);
   };
 
   const handlePasswordChange = (e) => {
     setPassword(e.target.value);
+    setshowError(false);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch('https://dummyjson.com/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+    fetch("https://api.escuelajs.co/api/v1/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        username: username,
+        email: email,
         password: password,
-        expiresInMins: 30, // optional, defaults to 60
+      }),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! Status: ${res.status}`);
+        }
+        return res.json();
       })
-    })
-    .then(res => {
-      if (!res.ok) {
-        throw new Error(`HTTP error! Status: ${res.status}`);
-      }
-      return res.json();
-    })
-    .then(data => {
-      console.log(data);
-      alert('Login Successfully',);
-    })
-    .catch(error => {
-      console.error('Fetch Error:', error);
-      alert('Invalid Credentials');
-    });
-    
+      .then((data) => {
+        setshowSuccess(true);
+        localStorage.setItem("auth_token", data.access_token);
+        navigate("/dashboard");
+      })
+      .catch((error) => {
+        console.error("Fetch Error:", error);
+        setshowError(true);
+      });
   };
 
   return (
@@ -47,12 +52,12 @@ function LoginComponent() {
         <h2>Login</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="username">Username:</label>
+            <label htmlFor="username">Email:</label>
             <input
               type="text"
               id="username"
-              value={username}
-              onChange={handleUsernameChange}
+              value={email}
+              onChange={handleEmailChange}
             />
           </div>
           <div className="form-group">
@@ -64,7 +69,15 @@ function LoginComponent() {
               onChange={handlePasswordChange}
             />
           </div>
-          <button type="submit"  onClick={handleSubmit}>Login</button>
+          <button type="submit" onClick={handleSubmit}>
+            Login
+          </button>
+          {showError ? (
+            <div className="Error-Message">Invalid Credentials</div>
+          ) : null}
+          {showSuccess ? (
+            <div className="success-Message">Logged in Successfully</div>
+          ) : null}
         </form>
       </div>
     </div>
