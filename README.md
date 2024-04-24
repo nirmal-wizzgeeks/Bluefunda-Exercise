@@ -4,13 +4,14 @@ In this app, Login page is created and integrated with JWT mock api, Once the va
 
 In dashboard page, logged in user details are shown which is received from the JWT login token, that we stored.
 
-Steps to run:
 
 Netflify Deployed URL: https://main--bluefunda-excercise.netlify.app/
 
 Node version: 18.18.0 
 
 Npm version: 9.8.1
+
+Steps to run:
 
 1. Clone this repo
 2. Run the command - "npm i"
