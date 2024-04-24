@@ -6,6 +6,11 @@ In dashboard page, logged in user details are shown which is received from the J
 
 Steps to run:
 
+Netflify Deployed URL: https://main--bluefunda-excercise.netlify.app/
+
+Node version: 18.18.0 
+Npm version: 9.8.1
+
 1. Clone this repo
 2. Run the command - "npm i"
 3. Run the command - "npm start"
